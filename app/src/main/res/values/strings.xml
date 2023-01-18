@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Keystore Attestation Sample</string>
+    <string name="generated_attested_keypair">Generate attested keypair</string>
+    <string name="check_logcat">Key details logged to logcat</string>
+</resources>
