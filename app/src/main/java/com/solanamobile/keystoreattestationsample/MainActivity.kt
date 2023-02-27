@@ -33,7 +33,9 @@ class MainActivity : AppCompatActivity() {
             KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
         ).setAttestationChallenge(
             "Some challenge bytes".toByteArray(Charsets.UTF_8)
-        ).setDevicePropertiesAttestationIncluded(true).build()
+        ).setDevicePropertiesAttestationIncluded(true
+        ).setIsStrongBoxBacked(true
+        ).build()
 
         kpg.initialize(parameterSpec)
 
@@ -46,6 +48,20 @@ class MainActivity : AppCompatActivity() {
             cert as X509Certificate
             Log.d("KEY", "[CERT $i]")
             Log.d("KEY", cert.toString())
+            Log.d("KEY", "Encoded = ${cert.encoded.joinToString(separator = " ") { 
+                it.toUByte().toString(16).padStart(2, '0') } 
+            }")
+
+            // If present, log the Keystore Attestation Extension
+            try {
+                Log.d(
+                    "KEY",
+                    "OID 1.3.6.1.4.1.11129.2.1.17 = ${
+                        cert.getExtensionValue("1.3.6.1.4.1.11129.2.1.17")
+                            .joinToString(separator = " ") { it.toUByte().toString(16).padStart(2, '0') }
+                    }"
+                )
+            } catch (e: NullPointerException) {}
         }
 
         Snackbar.make(view, R.string.check_logcat, Snackbar.LENGTH_SHORT).show()
